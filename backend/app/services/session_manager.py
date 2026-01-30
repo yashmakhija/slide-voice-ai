@@ -102,6 +102,8 @@ class FunctionHandler:
             return self._handle_navigate(args)
         elif function_name == "get_current_slide_info":
             return self._handle_get_info()
+        elif function_name == "end_presentation":
+            return self._handle_end_presentation(args)
         else:
             logger.warning(f"Unknown function: {function_name}")
             return {"error": f"Unknown function: {function_name}"}, None
@@ -134,3 +136,15 @@ class FunctionHandler:
     def _handle_get_info(self) -> tuple[dict[str, Any], None]:
         """Handle get_current_slide_info function call."""
         return self.session.get_slide_info(), None
+
+    def _handle_end_presentation(
+        self, args: dict[str, Any]
+    ) -> tuple[dict[str, Any], None]:
+        farewell = args.get("farewell_message", "Thank you for attending!")
+        logger.info(f"Ending presentation: {farewell}")
+        self.session.is_presenting = False
+        return {
+            "success": True,
+            "action": "end_presentation",
+            "farewell": farewell,
+        }, None

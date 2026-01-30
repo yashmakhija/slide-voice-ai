@@ -31,6 +31,8 @@ class ConnectionManager:
         self.function_handler = FunctionHandler(self.session)
         self.realtime_client = RealtimeClient()
         self._running = False
+        self._openai_connected = asyncio.Event()
+        self._ending_presentation = False
 
     async def send_to_client(self, event: dict[str, Any]) -> None:
         try:
@@ -87,10 +89,19 @@ class ConnectionManager:
 
         elif event_type == "response.done":
             self.session.is_ai_speaking = False
+            # If ending presentation, stop after AI finishes farewell
+            if self._ending_presentation:
+                logger.info("AI finished farewell - stopping session")
+                await asyncio.sleep(1)  # Brief pause after farewell
+                await self._stop_session()
 
         elif event_type == "input_audio_buffer.speech_started":
             self.session.is_ai_speaking = False
-            logger.debug("User started speaking (interruption)")
+            logger.info("User started speaking - interrupting AI")
+            # Cancel any ongoing AI response to allow interruption
+            await self.realtime_client.cancel_response()
+            # Notify frontend that AI stopped speaking
+            await self.send_to_client({"type": "audio.interrupted"})
 
     async def _handle_function_call(self, event: dict[str, Any]) -> None:
         call_id = event.get("call_id", "")
@@ -116,6 +127,11 @@ class ConnectionManager:
             await self.send_to_client(slide_event.model_dump())
 
         await self.realtime_client.send_function_result(call_id, result)
+
+        # If end_presentation was called, set flag to stop after AI finishes speaking
+        if result.get("action") == "end_presentation":
+            logger.info("End presentation requested - will stop after AI farewell")
+            self._ending_presentation = True
 
     async def handle_client_event(self, data: dict[str, Any]) -> None:
         """Process events from the frontend."""
@@ -159,6 +175,7 @@ class ConnectionManager:
     async def _start_session(self) -> None:
         try:
             await self.realtime_client.connect()
+            self._openai_connected.set()
 
             config = build_session_config()
             await self.realtime_client.configure_session(config)
@@ -182,6 +199,7 @@ class ConnectionManager:
 
     async def _stop_session(self) -> None:
         self.session.is_presenting = False
+        self._openai_connected.clear()
         await self.realtime_client.disconnect()
         await self.send_to_client(SessionStoppedEvent().model_dump())
         logger.info(f"Session stopped: {self.session.session_id}")
@@ -208,6 +226,8 @@ class ConnectionManager:
         async def forward_openai_to_client() -> None:
             """Forward events from OpenAI to the frontend."""
             try:
+                # Wait for OpenAI connection before starting to receive
+                await self._openai_connected.wait()
                 async for event in self.realtime_client.receive():
                     if not self._running:
                         break
@@ -239,6 +259,7 @@ class ConnectionManager:
 
     async def cleanup(self) -> None:
         self._running = False
+        self._openai_connected.set()  # Unblock waiting coroutine
         if self.realtime_client.is_connected:
             await self.realtime_client.disconnect()
 

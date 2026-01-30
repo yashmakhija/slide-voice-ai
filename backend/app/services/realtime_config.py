@@ -38,6 +38,24 @@ TOOLS: list[dict[str, Any]] = [
             "required": [],
         },
     },
+    {
+        "type": "function",
+        "name": "end_presentation",
+        "description": (
+            "End the presentation session. Call this when the user indicates they are done, "
+            "says goodbye, thanks you, or declines to ask more questions after you offer."
+        ),
+        "parameters": {
+            "type": "object",
+            "properties": {
+                "farewell_message": {
+                    "type": "string",
+                    "description": "A brief farewell message to say before ending",
+                },
+            },
+            "required": [],
+        },
+    },
 ]
 
 
@@ -58,6 +76,8 @@ def build_system_prompt() -> str:
    - Then answer the question in context of that slide
 4. Keep responses concise but informative (2-3 sentences typically)
 5. Be enthusiastic and make the content accessible to beginners
+6. On the last slide, after presenting, ask if they have questions or want to revisit anything
+7. If the user says "no", "bye", "thanks", "that's all", or indicates they're done, call end_presentation() to end the session gracefully
 
 ## Navigation Rules
 - If user asks about "types of ML" or "supervised/unsupervised" → Slide 2
