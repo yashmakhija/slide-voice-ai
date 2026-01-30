@@ -1,18 +1,34 @@
 import { motion } from "framer-motion";
-import { Mic } from "lucide-react";
+import { Mic, MicOff } from "lucide-react";
 
 interface VoiceIndicatorProps {
+  isActive: boolean;
   isSpeaking: boolean;
   isListening: boolean;
+  isProcessing: boolean;
+  onClick: () => void;
+  disabled?: boolean;
 }
 
-export function VoiceIndicator({ isSpeaking, isListening }: VoiceIndicatorProps) {
-  const isActive = isSpeaking || isListening;
+export function VoiceIndicator({
+  isActive,
+  isSpeaking,
+  isListening,
+  isProcessing,
+  onClick,
+  disabled,
+}: VoiceIndicatorProps) {
+  const showPulse = isSpeaking || isListening || isProcessing;
 
   return (
-    <div className="flex items-center gap-3">
+    <button
+      onClick={onClick}
+      disabled={disabled}
+      className="flex items-center gap-3 outline-none disabled:opacity-50"
+      aria-label={isActive ? "Stop voice session" : "Start voice session"}
+    >
       <div className="relative">
-        {isActive && (
+        {showPulse && (
           <motion.span
             className="absolute inset-0 rounded-full bg-primary"
             initial={{ scale: 1, opacity: 0.4 }}
@@ -22,16 +38,16 @@ export function VoiceIndicator({ isSpeaking, isListening }: VoiceIndicatorProps)
         )}
         <motion.div
           className={`relative w-10 h-10 rounded-full flex items-center justify-center transition-colors duration-300 ${
-            isActive ? "bg-primary" : "bg-muted"
+            isActive ? "bg-primary" : "bg-muted hover:bg-muted/80"
           }`}
-          animate={isActive ? { scale: [1, 1.05, 1] } : {}}
+          animate={showPulse ? { scale: [1, 1.05, 1] } : {}}
           transition={{ duration: 1, repeat: Infinity }}
         >
-          <Mic
-            className={`w-4 h-4 transition-colors duration-300 ${
-              isActive ? "text-primary-foreground" : "text-muted-foreground"
-            }`}
-          />
+          {isActive ? (
+            <Mic className="w-4 h-4 text-primary-foreground" />
+          ) : (
+            <MicOff className="w-4 h-4 text-muted-foreground" />
+          )}
         </motion.div>
       </div>
 
@@ -41,9 +57,7 @@ export function VoiceIndicator({ isSpeaking, isListening }: VoiceIndicatorProps)
             <motion.span
               key={i}
               className="w-1 bg-primary rounded-full"
-              animate={{
-                height: [8, 20, 8],
-              }}
+              animate={{ height: [8, 20, 8] }}
               transition={{
                 duration: 0.6,
                 repeat: Infinity,
@@ -58,9 +72,15 @@ export function VoiceIndicator({ isSpeaking, isListening }: VoiceIndicatorProps)
         </div>
       ) : (
         <span className="text-xs font-medium text-muted-foreground">
-          {isListening ? "Listening..." : "Ready"}
+          {isProcessing
+            ? "Connecting..."
+            : isListening
+            ? "Listening..."
+            : isActive
+            ? "Ready"
+            : "Click to start"}
         </span>
       )}
-    </div>
+    </button>
   );
 }
