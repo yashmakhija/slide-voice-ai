@@ -23,7 +23,7 @@ function App() {
       <div className="min-h-svh bg-background">
         <Header />
 
-        <main className="flex min-h-svh items-center justify-center pt-20 pb-24">
+        <main className="flex min-h-svh items-center justify-center pt-16 sm:pt-20 pb-20 sm:pb-24 px-4 sm:px-0">
           {error ? (
             <div className="w-full max-w-2xl mx-auto px-6">
               <div className="rounded-2xl bg-destructive/10 p-8 text-center">

@@ -40,20 +40,21 @@ export function SlideControls() {
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       transition={{ delay: 0.6 }}
-      className="fixed bottom-0 left-0 right-0 z-20 pb-6 sm:pb-8 bg-gradient-to-t from-background via-background/80 to-transparent pt-8"
+      className="fixed bottom-0 left-0 right-0 z-20 pb-4 sm:pb-8 bg-gradient-to-t from-background via-background/80 to-transparent pt-8"
+      style={{ paddingBottom: "max(1rem, env(safe-area-inset-bottom))" }}
       aria-label="Slide navigation"
     >
-      <div className="flex items-center justify-center gap-4">
+      <div className="flex items-center justify-center gap-3 sm:gap-4">
         <button
           onClick={handlePrev}
           disabled={!canPrev}
           aria-label="Previous slide"
-          className="w-10 h-10 rounded-full border border-border bg-background flex items-center justify-center transition-all duration-200 hover:border-primary hover:text-primary active:scale-95 disabled:opacity-40 disabled:cursor-not-allowed"
+          className="w-11 h-11 sm:w-10 sm:h-10 rounded-full border border-border bg-background flex items-center justify-center transition-all duration-200 hover:border-primary hover:text-primary active:scale-95 disabled:opacity-40 disabled:cursor-not-allowed touch-manipulation"
         >
           <ChevronLeft className="w-5 h-5" />
         </button>
 
-        <div className="flex items-center gap-2 min-w-[100px] justify-center" role="tablist">
+        <div className="flex items-center gap-1.5 sm:gap-2 min-w-[80px] sm:min-w-[100px] justify-center" role="tablist">
           {Array.from({ length: totalSlides }).map((_, i) => (
             <span
               key={i}
@@ -61,7 +62,7 @@ export function SlideControls() {
               aria-selected={i === currentIndex}
               className={`block rounded-full transition-all duration-300 ${
                 i === currentIndex
-                  ? "w-6 h-1.5 bg-primary"
+                  ? "w-5 sm:w-6 h-1.5 bg-primary"
                   : "w-1.5 h-1.5 bg-muted-foreground/40"
               }`}
             />
@@ -72,7 +73,7 @@ export function SlideControls() {
           onClick={handleNext}
           disabled={!canNext}
           aria-label="Next slide"
-          className="w-10 h-10 rounded-full border border-border bg-background flex items-center justify-center transition-all duration-200 hover:border-primary hover:text-primary active:scale-95 disabled:opacity-40 disabled:cursor-not-allowed"
+          className="w-11 h-11 sm:w-10 sm:h-10 rounded-full border border-border bg-background flex items-center justify-center transition-all duration-200 hover:border-primary hover:text-primary active:scale-95 disabled:opacity-40 disabled:cursor-not-allowed touch-manipulation"
         >
           <ChevronRight className="w-5 h-5" />
         </button>

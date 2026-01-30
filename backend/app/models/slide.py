@@ -9,6 +9,7 @@ class Slide(BaseModel):
         default_factory=list, description="Bullet points for the slide"
     )
     narration: str = Field(..., min_length=1, description="AI narration script")
+    iconName: str = Field(default="layers", description="Icon name for the slide")
 
 
 class SlideNavigationRequest(BaseModel):

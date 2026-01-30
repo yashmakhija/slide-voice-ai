@@ -4,6 +4,7 @@ SLIDES: list[Slide] = [
     Slide(
         id=1,
         title="What is Machine Learning?",
+        iconName="brain",
         content=[
             "A subset of Artificial Intelligence",
             "Systems that learn from data patterns",
@@ -24,6 +25,7 @@ to Google search results to spam filters in your email.""",
     Slide(
         id=2,
         title="Types of Machine Learning",
+        iconName="layers",
         content=[
             "Supervised Learning: Learn from labeled examples",
             "Unsupervised Learning: Find hidden patterns",
@@ -46,6 +48,7 @@ and robotics applications.""",
     Slide(
         id=3,
         title="Real-World Applications",
+        iconName="globe",
         content=[
             "Netflix & Spotify: Personalized recommendations",
             "Banks: Fraud detection in real-time",
@@ -67,6 +70,7 @@ use ML to understand and generate human language.""",
     Slide(
         id=4,
         title="How Models Learn",
+        iconName="zap",
         content=[
             "Step 1: Collect and prepare training data",
             "Step 2: Choose a model architecture",
@@ -93,6 +97,7 @@ Finally, we deploy to production and continuously monitor performance.""",
     Slide(
         id=5,
         title="Getting Started with ML",
+        iconName="rocket",
         content=[
             "Python: The language of ML",
             "scikit-learn: Great for beginners",

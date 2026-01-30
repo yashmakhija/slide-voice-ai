@@ -32,7 +32,7 @@ export function SlideView({ isLoading = false }: SlideViewProps) {
   const IconComponent = iconMap[slide.iconName || "layers"] || Layers;
 
   return (
-    <div className="w-full max-w-2xl mx-auto px-6">
+    <div className="w-full max-w-2xl mx-auto px-4 sm:px-6">
       <AnimatePresence mode="wait">
         <motion.article
           key={slide.id}
@@ -45,7 +45,7 @@ export function SlideView({ isLoading = false }: SlideViewProps) {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ delay: 0.1 }}
-            className="text-[11px] font-medium text-primary tracking-[0.2em] uppercase mb-8"
+            className="text-[10px] sm:text-[11px] font-medium text-primary tracking-[0.2em] uppercase mb-5 sm:mb-8"
           >
             {String(currentIndex + 1).padStart(2, "0")} of {String(totalSlides).padStart(2, "0")}
           </motion.p>
@@ -54,31 +54,31 @@ export function SlideView({ isLoading = false }: SlideViewProps) {
             initial={{ opacity: 0, scale: 0.8 }}
             animate={{ opacity: 1, scale: 1 }}
             transition={{ delay: 0.15, type: "spring", stiffness: 300, damping: 20 }}
-            className="w-12 h-12 rounded-2xl bg-primary flex items-center justify-center mb-8"
+            className="w-10 h-10 sm:w-12 sm:h-12 rounded-xl sm:rounded-2xl bg-primary flex items-center justify-center mb-5 sm:mb-8"
           >
-            <IconComponent className="w-5 h-5 text-primary-foreground" strokeWidth={2} />
+            <IconComponent className="w-4 h-4 sm:w-5 sm:h-5 text-primary-foreground" strokeWidth={2} />
           </motion.div>
 
           <motion.h1
             initial={{ opacity: 0, y: 16 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.2 }}
-            className="text-[28px] sm:text-[36px] lg:text-[42px] font-semibold text-foreground leading-[1.1] tracking-[-0.02em] mb-10"
+            className="text-[24px] sm:text-[36px] lg:text-[42px] font-semibold text-foreground leading-[1.15] sm:leading-[1.1] tracking-[-0.02em] mb-6 sm:mb-10"
           >
             {slide.title}
           </motion.h1>
 
-          <ul className="space-y-5">
+          <ul className="space-y-4 sm:space-y-5">
             {slide.content.map((item, index) => (
               <motion.li
                 key={index}
                 initial={{ opacity: 0, x: -12 }}
                 animate={{ opacity: 1, x: 0 }}
                 transition={{ delay: 0.3 + index * 0.08 }}
-                className="flex gap-4"
+                className="flex gap-3 sm:gap-4"
               >
-                <span className="w-1.5 h-1.5 rounded-full bg-primary mt-3 flex-shrink-0" />
-                <p className="text-[15px] sm:text-[17px] text-muted-foreground leading-[1.7]">
+                <span className="w-1.5 h-1.5 rounded-full bg-primary mt-2.5 sm:mt-3 flex-shrink-0" />
+                <p className="text-[14px] sm:text-[17px] text-muted-foreground leading-[1.65] sm:leading-[1.7]">
                   {item}
                 </p>
               </motion.li>

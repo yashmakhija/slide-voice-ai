@@ -19,7 +19,7 @@ export function Header() {
     <motion.header
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
-      className="fixed top-0 left-0 right-0 z-10 flex justify-center py-5"
+      className="fixed top-0 left-0 right-0 z-10 flex justify-center py-4 sm:py-5 bg-gradient-to-b from-background via-background/90 to-transparent pb-8"
     >
       <VoiceIndicator
         isActive={isActive}
