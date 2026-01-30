@@ -2,7 +2,7 @@ import logging
 from contextlib import asynccontextmanager
 from typing import AsyncGenerator
 
-from fastapi import FastAPI
+from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 
 from app.config import get_settings
@@ -67,8 +67,6 @@ async def get_slide(slide_id: int) -> Slide:
     for slide in SLIDES:
         if slide.id == slide_id:
             return slide
-    from fastapi import HTTPException
-
     raise HTTPException(status_code=404, detail=f"Slide {slide_id} not found")
 
 

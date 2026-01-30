@@ -1,7 +1,6 @@
-import asyncio
 import json
 import logging
-from typing import Any, AsyncGenerator, Callable
+from typing import Any, AsyncGenerator
 
 import websockets
 from websockets.asyncio.client import ClientConnection
@@ -17,7 +16,6 @@ class RealtimeClient:
     def __init__(self) -> None:
         self._ws: ClientConnection | None = None
         self._is_connected: bool = False
-        self._on_message_callback: Callable[[dict[str, Any]], None] | None = None
 
     @property
     def is_connected(self) -> bool:

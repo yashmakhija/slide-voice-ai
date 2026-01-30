@@ -1,5 +1,4 @@
 import asyncio
-import json
 import logging
 from typing import Any
 
@@ -202,18 +201,22 @@ class ConnectionManager:
         )
 
     async def run(self) -> None:
+        """Main loop: handle client messages and forward OpenAI responses."""
         self._running = True
-
         await self._send_slide_changed()
 
         async def forward_openai_to_client() -> None:
+            """Forward events from OpenAI to the frontend."""
             try:
                 async for event in self.realtime_client.receive():
                     if not self._running:
                         break
                     await self.handle_openai_event(event)
             except Exception as e:
-                logger.error(f"OpenAI receiver error: {e}")
+                if self._running:
+                    logger.error(f"OpenAI receiver error: {e}")
+            finally:
+                self._running = False
 
         async def receive_from_client() -> None:
             try:
@@ -222,14 +225,17 @@ class ConnectionManager:
                     await self.handle_client_event(data)
             except WebSocketDisconnect:
                 logger.info("Client disconnected")
-                self._running = False
             except Exception as e:
-                logger.error(f"Client receiver error: {e}")
+                if self._running:
+                    logger.error(f"Client receiver error: {e}")
+            finally:
                 self._running = False
 
-        client_task = asyncio.create_task(receive_from_client())
-
-        await client_task
+        await asyncio.gather(
+            receive_from_client(),
+            forward_openai_to_client(),
+            return_exceptions=True,
+        )
 
     async def cleanup(self) -> None:
         self._running = False
