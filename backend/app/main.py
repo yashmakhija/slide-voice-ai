@@ -8,6 +8,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from app.config import get_settings
 from app.data.slides import SLIDES
 from app.models import Slide
+from app.routers import websocket_router
 
 
 settings = get_settings()
@@ -43,6 +44,8 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
+
+app.include_router(websocket_router)
 
 
 
