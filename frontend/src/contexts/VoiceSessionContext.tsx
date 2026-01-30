@@ -217,8 +217,9 @@ export function VoiceSessionProvider({ children }: { children: ReactNode }) {
       setVoiceState("processing");
       console.log("Starting voice session...");
 
-      const protocol = window.location.protocol === "https:" ? "wss:" : "ws:";
-      const ws = new WebSocket(`${protocol}//${window.location.host}/ws`);
+      const apiUrl = import.meta.env.VITE_API_URL || "";
+      const wsUrl = apiUrl.replace(/^http/, "ws") || `${window.location.protocol === "https:" ? "wss:" : "ws:"}//${window.location.host}`;
+      const ws = new WebSocket(`${wsUrl}/ws`);
       wsRef.current = ws;
 
       await new Promise<void>((resolve, reject) => {

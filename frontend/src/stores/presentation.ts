@@ -35,7 +35,8 @@ export const usePresentationStore = create<PresentationStore>((set, get) => ({
   fetchSlides: async () => {
     set({ isLoading: true, error: null });
     try {
-      const response = await fetch("/api/slides");
+      const apiUrl = import.meta.env.VITE_API_URL || "";
+      const response = await fetch(`${apiUrl}/api/slides`);
       if (!response.ok) {
         throw new Error(`Failed to fetch slides: ${response.statusText}`);
       }
