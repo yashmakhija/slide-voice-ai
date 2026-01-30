@@ -1,38 +1,35 @@
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
+import { useEffect } from "react";
+import { Header } from "@/components/Header";
+import { SlideView } from "@/components/SlideView";
+import { SlideControls } from "@/components/SlideControls";
+import { usePresentationStore } from "@/stores";
 
 function App() {
+  const fetchSlides = usePresentationStore((s) => s.fetchSlides);
+  const isLoading = usePresentationStore((s) => s.isLoading);
+  const error = usePresentationStore((s) => s.error);
+
+  useEffect(() => {
+    fetchSlides();
+  }, [fetchSlides]);
+
   return (
-    <div className="min-h-screen bg-background p-8">
-      <div className="mx-auto max-w-4xl">
-        <header className="mb-8 text-center">
-          <h1 className="text-4xl font-bold text-foreground">
-            AI Voice Presentation
-          </h1>
-          <p className="mt-2 text-muted-foreground">
-            Interactive voice-controlled ML presentation
-          </p>
-        </header>
+    <div className="min-h-svh bg-background">
+      <Header />
 
-        <Card className="mb-6">
-          <CardHeader>
-            <CardTitle>Slide 1: What is Machine Learning?</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <ul className="list-disc space-y-2 pl-6">
-              <li>A subset of Artificial Intelligence</li>
-              <li>Systems that learn from data patterns</li>
-              <li>Improves performance without explicit programming</li>
-            </ul>
-          </CardContent>
-        </Card>
+      <main className="flex min-h-svh items-center justify-center pt-20 pb-24">
+        {error ? (
+          <div className="w-full max-w-2xl mx-auto px-6">
+            <div className="rounded-2xl bg-destructive/10 p-8 text-center">
+              <p className="text-sm text-destructive">{error}</p>
+            </div>
+          </div>
+        ) : (
+          <SlideView isLoading={isLoading} />
+        )}
+      </main>
 
-        <div className="flex justify-center gap-4">
-          <Button variant="outline">Previous</Button>
-          <Button>Start Presentation</Button>
-          <Button variant="outline">Next</Button>
-        </div>
-      </div>
+      <SlideControls />
     </div>
   );
 }

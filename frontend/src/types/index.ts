@@ -1,2 +1,2 @@
-export * from "./slide";
-export * from "./events";
+export type { Slide } from "./slide";
+export type { VoiceState } from "./voice";

@@ -3,11 +3,5 @@ export interface Slide {
   title: string;
   content: string[];
   narration: string;
-}
-
-export interface SlideState {
-  currentSlide: Slide | null;
-  totalSlides: number;
-  hasNext: boolean;
-  hasPrevious: boolean;
+  iconName?: "brain" | "layers" | "globe" | "zap" | "rocket";
 }
